@@ -14,7 +14,7 @@ csp['connect-src'] = [
 
 /* define your routes here */
 router.get('/', (req, res) => {
-  return Promise.resolve({ data: { name: '<%= name %>' } })
+  return Promise.resolve({ name: '<%= name %>' })
   .then(data => res.render('index.html', data));
 });
 
