@@ -35,7 +35,7 @@ describe('Mocha', () => {
 describe('config', () => {
   it('instance is correct', (done) => {
     const mock = require('../router');
-    const { express } = require('visual-cms.website')('axon', __dirname);
+    const { express } = require('visual-cms.website')('<%= name %>', __dirname);
     expect(mock).to.eql(express);
     done();
   });

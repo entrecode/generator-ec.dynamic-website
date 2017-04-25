@@ -23,9 +23,23 @@ yo ec.dynamic-website
  * Yeoman can be too opinionated at times but is easily convinced not to be.
  * Feel free to [learn more about Yeoman](http://yeoman.io/).
 
+## ec Development info
+
+- setup script is in `/generators/app/index.js`
+- the seed project is in `/generators/app/templates`
+- files that can simply be copied can be listed in the `justCopy` Array in the setup script
+- You can fill in data requested by the generator with EJS, e.g. `<%= name %>`.
+- files that need to be run through the template engine have to be listed in the `templatedCopy` 
+Array in the setup script
+- You can ask the user for additional data by adding a prompt in the setup script 
+(uses [Inquirer.js](https://github.com/SBoudrias/Inquirer.js))
+- don't forget to run the tests
+- for local development, `npm link` the module, you can then use it in yo
+- don't forget to `npm publish` new versions
+
 ## License
 
-MIT © [Ruben Deyhle]()
+MIT © entrecode GmbH
 
 
 [npm-image]: https://badge.fury.io/js/generator-ec.dynamic-website.svg

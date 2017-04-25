@@ -51,7 +51,6 @@ function shortenUUID(uuid, factor) {
 const justCopy = [
   '.gitignore',
   'Dockerfile',
-  'test/basic.test.js',
   'extensions/.gitignore',
   'static/.gitignore',
   'views/index.html',
@@ -61,6 +60,7 @@ const templatedCopy = [
   'readme.md',
   'router.js',
   'config/default.yml',
+  'test/basic.test.js',
 ];
 
 module.exports = class extends Generator {
