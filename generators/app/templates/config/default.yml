@@ -1,0 +1,17 @@
+title: <%= name %>
+datamanagerURL: <%= datamanagerRootURL %>/api/<%= shortID %>
+datamanagerRootURL: <%= datamanagerRootURL %>
+publicURL: http://localhost:3003/<%= name %>
+shortID: <%= shortID %>
+dataManagerID: <%= dataManagerID %><% if (search) {%>
+searchURL: <%= search %><% } %>
+locale: de                # for date/time formatting
+timezone: Europe/Berlin   # for date/time formatting
+analyticsID: 
+clientID: local-development
+apiKey: 
+dynamicTemplates: {}
+disableTemplateCache : false
+memoryCacheTtl: 3600 # in seconds => 1 hour
+dmCache: true
+disableCrawling: false

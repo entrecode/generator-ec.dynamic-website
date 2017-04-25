@@ -1,0 +1,17 @@
+{
+  "name": "<%= name %>.dynamic-website",
+  "version": "0.0.1",
+  "description": "<%= name %> dynamic website for use in ec.render",
+  "main": "router.js",
+  "scripts": {
+    "start": "node router.js",
+    "test": "NODE_ENV=testing mocha -R spec",
+    "sass": "node-sass --watch --recursive --source-map-embed --output-style compressed style/style.scss static/style.css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "<%= git %>"
+  },
+  "author": "entrecode <info@entrecode.de>",
+  "private": true
+}

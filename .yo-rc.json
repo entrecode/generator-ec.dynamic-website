@@ -1,0 +1,9 @@
+{
+  "generator-node": {
+    "promptValues": {
+      "authorName": "Ruben Deyhle",
+      "authorEmail": "deyhle@entrecode.de",
+      "authorUrl": ""
+    }
+  }
+}
