@@ -49,7 +49,7 @@ function shortenUUID(uuid, factor) {
 }
 
 const justCopy = [
-  '.gitignore',
+  ['gitignore', '.gitignore'],
   'Dockerfile',
   'extensions/.npmignore',
   'static/.npmignore',
@@ -122,10 +122,19 @@ module.exports = class extends Generator {
       this.destinationPath(filename),
       this.props
     ));
-    justCopy.forEach(filename => this.fs.copy(
-      this.templatePath(filename),
-      this.destinationPath(filename)
-    ));
+    justCopy.forEach((filename) => {
+      if (Array.isArray(filename)) {
+        this.fs.copy(
+          this.templatePath(filename[0]),
+          this.destinationPath(filename[1])
+        );
+      } else {
+        this.fs.copy(
+          this.templatePath(filename),
+          this.destinationPath(filename)
+        );
+      }
+    });
   }
 
   install() {
