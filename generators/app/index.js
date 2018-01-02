@@ -51,8 +51,8 @@ function shortenUUID(uuid, factor) {
 const justCopy = [
   '.gitignore',
   'Dockerfile',
-  'extensions/.gitignore',
-  'static/.gitignore',
+  'extensions/.npmignore',
+  'static/.npmignore',
   'views/index.html',
 ];
 const templatedCopy = [

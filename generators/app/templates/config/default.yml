@@ -3,6 +3,7 @@ datamanagerURL: <%= datamanagerRootURL %>/api/<%= shortID %>
 datamanagerRootURL: <%= datamanagerRootURL %>
 publicURL: http://localhost:3003/<%= name %>
 shortID: <%= shortID %>
+useSDK: true
 dataManagerID: <%= dataManagerID %><% if (search) {%>
 searchURL: <%= search %><% } %>
 locale: de                # for date/time formatting
