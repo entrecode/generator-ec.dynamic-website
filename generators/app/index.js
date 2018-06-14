@@ -47,18 +47,26 @@ function shortenUUID(uuid, factor) {
 }
 
 const justCopy = [
-  ['gitignore', '.gitignore'],
-  'Dockerfile',
+  'config/development.yml',
+  'config/production.yml',
+  'config/local.js',
   'extensions/.npmignore',
+  'rancher_templates',
   'static/.npmignore',
-  'views/index.html'
+  ['vscode', '.vscode'],
+  'Dockerfile',
+  ['gitignore', '.gitignore'],
+  'server.js'
 ];
 const templatedCopy = [
+  'config/default.yml',
+  'config/stage.yml',
+  'test/basic.test.js',
+  'views',
   'package.json',
   'readme.md',
   'router.js',
-  'config/default.yml',
-  'test/basic.test.js'
+  'worker.js'
 ];
 
 module.exports = class extends Generator {
@@ -77,7 +85,7 @@ module.exports = class extends Generator {
       type: 'input',
       name: 'git',
       message: 'Please specify the git repository:',
-      default: `ssh://git@stash.entrecode.de:7999/${this.appname}/${this.appname}.dynamic-website.git`
+      default: `git@github.com:entrecode/${this.appname}.dynamic-website.git`
     }, {
       type: 'input',
       name: 'dataManagerID',
@@ -85,14 +93,14 @@ module.exports = class extends Generator {
       validate: id => /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/i.test(id)
     }, {
       type: 'list',
-      name: 'datamanagerRootURL',
-      message: 'Which Data Manager do you want to use?',
+      name: 'env',
+      message: 'Which environment to use?',
       choices: [
-        'https://datamanager.entrecode.de',
-        'https://datamanager.cachena.entrecode.de',
-        'https://datamanager.buffalo.entrecode.de'
+        'live',
+        'stage',
+        'nightly'
       ],
-      default: 'https://datamanager.entrecode.de'
+      default: 'live'
     }, {
       type: 'confirm',
       name: 'search',
@@ -100,18 +108,19 @@ module.exports = class extends Generator {
       default: false
     }];
 
-    return this.prompt(prompts).then(props => {
-      // To access props later use this.props.someAnswer;
-      props.shortID = shortenUUID(props.dataManagerID, 2);
-      if (props.search) {
-        if (props.datamanagerRootURL === 'https://datamanager.cachena.entrecode.de') {
-          props.search = 'https://search.cachena.entrecode.de';
-        } else {
-          props.search = 'https://search.entrecode.de';
+    return this.prompt(prompts)
+      .then(props => {
+        // To access props later use this.props.someAnswer;
+        props.shortID = shortenUUID(props.dataManagerID, 2);
+        if (props.search) {
+          if (props.env === 'stage') {
+            props.search = 'https://search.cachena.entrecode.de';
+          } else {
+            props.search = 'https://search.entrecode.de';
+          }
         }
-      }
-      this.props = props;
-    });
+        this.props = props;
+      });
   }
 
   writing() {
@@ -136,7 +145,8 @@ module.exports = class extends Generator {
   }
 
   install() {
-    this.npmInstall(['visual-cms.website'], {save: true});
-    this.npmInstall(['chai', 'html-validator', 'mocha', 'mocha-bamboo-reporter', 'node-sass', 'supertest'], {'save-dev': true});
+    this.npmInstall();
+    //this.npmInstall(['visual-cms.website'], { save: true });
+    //this.npmInstall(['chai', 'html-validator', 'mocha', 'mocha-bamboo-reporter', 'node-sass', 'supertest'], { 'save-dev': true });
   }
 };

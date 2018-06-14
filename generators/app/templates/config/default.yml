@@ -1,18 +1,53 @@
 title: <%= name %>
-datamanagerURL: <%= datamanagerRootURL %>/api/<%= shortID %>
-datamanagerRootURL: <%= datamanagerRootURL %>
-publicURL: http://localhost:3003/<%= name %>
-shortID: <%= shortID %>
-useSDK: true
-dataManagerID: <%= dataManagerID %><% if (search) {%>
+publicURL: http://localhost:3003/<%= name %><% if (search) {%>
 searchURL: <%= search %><% } %>
+datamanagerID: <%= dataManagerID %>
+shortID: <%= shortID %>
+env: <%= env %>
+useSDK: true
 locale: de                # for date/time formatting
 timezone: Europe/Berlin   # for date/time formatting
 analyticsID: 
 clientID: local-development
 apiKey: 
 dynamicTemplates: {}
-disableTemplateCache : false
+disableTemplateCache : true
 memoryCacheTtl: 3600 # in seconds => 1 hour
-dmCache: true
-disableCrawling: false
+dmCache:
+  cacheSize: 1000
+  timeToLive: undefined
+  appendSource: truedisableCrawling: false
+disableTLS: false
+port: 7777
+amqp:
+  active: false
+  url: 'amqp://render:render@localhost'
+logger:
+  console:
+    active: true
+    options:
+      colorize: true
+      timestamp: true
+      humanReadableUnhandledException: true
+      handleExceptions: true
+  sns:
+    active: false
+    options:
+      level: error
+      subject: 'Winston %l Report for <%= name %>: %e'
+      message: |-
+        <%= name %> experienced some problems:
+
+        Level "%l" logged "%e".
+
+        Metadata:
+        %m
+
+        Have a nice day.
+      #topic_arn:
+      #region:
+      #subscriber:
+      #aws_key:
+      #aws_secret:
+      humanReadableUnhandledException: true
+      handleExceptions: true

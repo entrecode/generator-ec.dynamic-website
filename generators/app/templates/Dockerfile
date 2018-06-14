@@ -1,7 +1,7 @@
 # Dockerfile based on tinibase used by entrecode. By entrecode.
 # Version 0.0.1
 
-FROM docker.entrecode.de/tini-build:6.8.0
-MAINTAINER Simon Scherzinger <scherzinger@entrecode.de>
+FROM docker.entrecode.de/tini-build:8.10.0
+LABEL maintainer="Simon Scherzinger <scherzinger@entrecode.de>"
 
-EXPOSE 3000
+EXPOSE 7777

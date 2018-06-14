@@ -1,0 +1,9 @@
+publicURL:
+logger:
+  console:
+    options:
+      colorize: false
+  sns:
+    active: false # true when you supplied config in ./default.yml
+    options:
+      subject: 'Winston %l Report for <%= name %> (stage): %e'
