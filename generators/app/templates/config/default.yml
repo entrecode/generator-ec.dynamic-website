@@ -16,7 +16,8 @@ memoryCacheTtl: 3600 # in seconds => 1 hour
 dmCache:
   cacheSize: 1000
   timeToLive: undefined
-  appendSource: truedisableCrawling: false
+  appendSource: true
+disableCrawling: false
 disableTLS: false
 port: 7777
 amqp:
