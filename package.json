@@ -1,6 +1,6 @@
 {
   "name": "generator-ec.dynamic-website",
-  "version": "0.1.2",
+  "version": "1.0.0",
   "description": "A generator for a visual cms dynamic website for ec.render. By entrecode.",
   "homepage": "https://entrecode.de",
   "author": {
@@ -15,22 +15,24 @@
     "yeoman-generator"
   ],
   "devDependencies": {
-    "yeoman-test": "^1.6.0",
-    "yeoman-assert": "^3.0.0",
-    "nsp": "^2.6.3",
-    "eslint": "^4.2.0",
-    "eslint-config-xo-space": "^0.16.0",
-    "jest": "^20.0.4",
-    "jest-cli": "^20.0.4"
+    "yeoman-test": "^1.7.2",
+    "yeoman-assert": "^3.1.1",
+    "nsp": "^3.2.1",
+    "eslint": "^4.19.1",
+    "eslint-config-xo-space": "^0.18.0",
+    "jest": "^23.1.0",
+    "jest-cli": "^23.1.0"
   },
   "dependencies": {
-    "yeoman-generator": "^1.0.0",
-    "chalk": "^2.0.1",
-    "yosay": "^2.0.0"
+    "yeoman-generator": "^2.0.5",
+    "chalk": "^2.4.1",
+    "yosay": "^2.0.2"
   },
   "jest": {
     "testEnvironment": "node",
-    "testPathIgnorePatterns": ["/templates/test"]
+    "testPathIgnorePatterns": [
+      "/templates/test"
+    ]
   },
   "scripts": {
     "prepublish": "nsp check",

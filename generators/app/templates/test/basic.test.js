@@ -6,22 +6,18 @@ const htmlValidator = require('html-validator');
 
 const expect = chai.expect;
 
-function validateResponse(html) {
+async function validateResponse(html) {
   const allowedErrors = [
     // hahaha no errors allowed in this project :D
   ];
-  return htmlValidator({ data: html })
-  .then(response => JSON.parse(response))
-  .then(response => response.messages)
-  .then(errors => errors.filter(error =>
+  let { messages } = await htmlValidator({ data: html })
+    .then(response => JSON.parse(response));
+  messages = messages.filter(error =>
     error.type === 'error' &&
     !allowedErrors
-    .map(allowedError => allowedError.test(error.message))
-    .some(x => x)
-  ))
-  .then((errors) => {
-    return errors.map(e => `${e.message}: ${e.extract.replace(/\n/g, '')}`).join('\n');
-  });
+      .map(allowedError => allowedError.test(error.message))
+      .some(x => x));
+  messages.map(e => `${e.message}: ${(e.extract || '').replace(/\n/g, '')}`).join('\n');
 }
 
 describe('Mocha', () => {
@@ -43,16 +39,16 @@ describe('config', () => {
 
 describe('files are minified', () => {
   const files = fs.readdirSync('./static')
-  .filter(filename => /\.js$/.test(filename) || /\.css$/.test(filename));
+    .filter(filename => /\.js$/.test(filename) || /\.css$/.test(filename));
 
-  for (let i in files) {
+  for (const i in files) {
     const file = files[i];
     it(`${file} is minified`, (done) => {
       const filepath = path.resolve('./static', file);
       fs.readFile(filepath, 'utf8', (error, result) => {
         const lines = result
-        .split('\n')
-        .map(line => line.length);
+          .split('\n')
+          .map(line => line.length);
         // Test 1: If the file is very small (less than 4 lines), we assume it is minified.
         if (lines.length <= 3) {
           return done();
@@ -68,6 +64,7 @@ describe('files are minified', () => {
     });
   }
 });
+
 describe('route tests', () => {
   let mock;
   before(() => {
@@ -76,19 +73,13 @@ describe('route tests', () => {
   const routes = [
     '/',
   ];
-  for (let i in routes) {
+  for (const i in routes) {
     const route = routes[i];
     describe(`get ${route}`, () => {
       let response;
-      before(function load() {
-        this.timeout(5000);
-
-        return request(mock)
-        .get(route)
-        .then((res) => {
-          response = res;
-          return Promise.resolve();
-        });
+      before(async function load() {
+        this.timeout(100000);
+        response = await request(mock).get(route)
       });
       it(`status 200 ${route}`, () => {
         expect(response.status).to.eql(200);
@@ -97,11 +88,9 @@ describe('route tests', () => {
         expect(response.ok).to.be.true;
         expect(response.type).to.eql('text/html');
       });
-      it(`valid html ${route}`, () => {
-        return validateResponse(response.text)
-        .then((errors) => {
-          expect(errors).to.eql('');
-        });
+      it(`valid html ${route}`, async () => {
+        const errors = await validateResponse(response.text)
+        expect(errors).to.eql('');
       });
     });
   }

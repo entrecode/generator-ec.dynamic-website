@@ -1,0 +1,14 @@
+publicURL:
+disableTemplateCache : false
+disableCrawling: false
+disableTLS: false
+amqp:
+  active: true
+  url: 'amqp://render:render@cluster-local.entrecode.de'
+logger:
+  console:
+    active: true
+    options:
+      colorize: false
+  sns:
+    active: false # true when you supplied config in ./default.yml

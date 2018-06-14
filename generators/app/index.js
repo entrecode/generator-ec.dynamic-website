@@ -3,9 +3,8 @@ const Generator = require('yeoman-generator');
 const chalk = require('chalk');
 const yosay = require('yosay');
 
-
 /**
- * shortenUUID(uuid[, factor])
+ * Function shortenUUID(uuid[, factor])
  *
  * shortens a UUID by XORing the the top half with the bottom half
  * The default shortening factor is 1, maximum is 5 (just one character returned).
@@ -21,46 +20,53 @@ function shortenUUID(uuid, factor) {
   if (!/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i.test(uuid) || (factor && typeof factor !== 'number')) {
     throw new Error('invalid parameter format');
   }
-  if (!factor || factor < 1 || factor > 5) { // set factor to 1 as default
+  if (!factor || factor < 1 || factor > 5) { // Set factor to 1 as default
     validatedFactor = 1;
   } else {
     validatedFactor = factor;
   }
-  shortUUID = uuid.replace(/-/g, ''); // strip the dashes out of the UUID
-  shortUUID = shortUUID.split(''); // turn into Array
-  shortUUID = shortUUID.map(element =>  // parse Integer value out of hex value
+  shortUUID = uuid.replace(/-/g, ''); // Strip the dashes out of the UUID
+  shortUUID = shortUUID.split(''); // Turn into Array
+  shortUUID = shortUUID.map(element => // Parse Integer value out of hex value
     parseInt(element, 16));
   let j;
   let l;
 
   function xor(val, index) {
-    return val ^ shortUUID[l / 2 + index]; // XOR the given value of the first half with the
-                                           // corresponding of the second half
+    return val ^ shortUUID[(l / 2) + index]; // XOR the given value of the first half with the corresponding of the second half
   }
 
-  for (j = 0; j < validatedFactor; j++) { // factor times XORing
+  for (j = 0; j < validatedFactor; j++) { // Factor times XORing
     l = shortUUID.length;
     shortUUID = shortUUID.slice(0, l / 2).map(xor);
   }
-  shortUUID = shortUUID.map(element =>  // turn back into hex value
+  shortUUID = shortUUID.map(element => // Turn back into hex value
     element.toString(16));
-  shortUUID = shortUUID.join(''); // make array to string
+  shortUUID = shortUUID.join(''); // Make array to string
   return shortUUID;
 }
 
 const justCopy = [
-  '.gitignore',
+  'config/development.yml',
+  'config/production.yml',
+  'config/local.js',
+  'extensions/.npmignore',
+  'rancher_templates',
+  'static/.npmignore',
+  ['vscode', '.vscode'],
   'Dockerfile',
-  'extensions/.gitignore',
-  'static/.gitignore',
-  'views/index.html',
+  ['gitignore', '.gitignore'],
+  'server.js'
 ];
 const templatedCopy = [
+  'config/default.yml',
+  'config/stage.yml',
+  'test/basic.test.js',
+  'views',
   'package.json',
   'readme.md',
   'router.js',
-  'config/default.yml',
-  'test/basic.test.js',
+  'worker.js'
 ];
 
 module.exports = class extends Generator {
@@ -79,22 +85,22 @@ module.exports = class extends Generator {
       type: 'input',
       name: 'git',
       message: 'Please specify the git repository:',
-      default: `ssh://git@stash.entrecode.de:7999/${this.appname}/${this.appname}.dynamic-website.git`,
+      default: `git@github.com:entrecode/${this.appname}.dynamic-website.git`
     }, {
       type: 'input',
       name: 'dataManagerID',
       message: 'Which Data Manager ID?',
-      validate: (id) => /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/i.test(id),
+      validate: id => /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/i.test(id)
     }, {
       type: 'list',
-      name: 'datamanagerRootURL',
-      message: 'Which Data Manager do you want to use?',
+      name: 'env',
+      message: 'Which environment to use?',
       choices: [
-        'https://datamanager.entrecode.de',
-        'https://datamanager.cachena.entrecode.de',
-        'https://datamanager.buffalo.entrecode.de',
+        'live',
+        'stage',
+        'nightly'
       ],
-      default: 'https://datamanager.entrecode.de'
+      default: 'live'
     }, {
       type: 'confirm',
       name: 'search',
@@ -102,18 +108,19 @@ module.exports = class extends Generator {
       default: false
     }];
 
-    return this.prompt(prompts).then(props => {
-      // To access props later use this.props.someAnswer;
-      props.shortID = shortenUUID(props.dataManagerID, 2);
-      if (props.search) {
-        if (props.datamanagerRootURL ===  'https://datamanager.cachena.entrecode.de') {
-          props.search = 'https://search.cachena.entrecode.de';
-        } else {
-          props.search = 'https://search.entrecode.de';
+    return this.prompt(prompts)
+      .then(props => {
+        // To access props later use this.props.someAnswer;
+        props.shortID = shortenUUID(props.dataManagerID, 2);
+        if (props.search) {
+          if (props.env === 'stage') {
+            props.search = 'https://search.cachena.entrecode.de';
+          } else {
+            props.search = 'https://search.entrecode.de';
+          }
         }
-      }
-      this.props = props;
-    });
+        this.props = props;
+      });
   }
 
   writing() {
@@ -122,14 +129,24 @@ module.exports = class extends Generator {
       this.destinationPath(filename),
       this.props
     ));
-    justCopy.forEach(filename => this.fs.copy(
-      this.templatePath(filename),
-      this.destinationPath(filename)
-    ));
+    justCopy.forEach(filename => {
+      if (Array.isArray(filename)) {
+        this.fs.copy(
+          this.templatePath(filename[0]),
+          this.destinationPath(filename[1])
+        );
+      } else {
+        this.fs.copy(
+          this.templatePath(filename),
+          this.destinationPath(filename)
+        );
+      }
+    });
   }
 
   install() {
-    this.npmInstall(['visual-cms.website'], { 'save': true });
-    this.npmInstall(['chai', 'html-validator', 'mocha', 'mocha-bamboo-reporter', 'node-sass', 'supertest'], { 'save-dev': true });
+    this.npmInstall();
+    //this.npmInstall(['visual-cms.website'], { save: true });
+    //this.npmInstall(['chai', 'html-validator', 'mocha', 'mocha-bamboo-reporter', 'node-sass', 'supertest'], { 'save-dev': true });
   }
 };

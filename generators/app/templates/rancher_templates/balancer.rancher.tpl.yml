@@ -1,0 +1,2 @@
+{{balancer}}:
+  start_on_create: true

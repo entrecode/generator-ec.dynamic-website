@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block metatitle %}{{ name | default('<%= name %>') }}{% endblock %}</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body class="{% block bodyClass %}{% endblock %}">
+<div id="app" class="page">
+  <header class="align-center">
+    {% block header %}
+        <a href="/"><%= name %></a>
+
+      {% block header_nav %}
+      {% endblock %}
+    {% endblock %}
+  </header>
+  <main>
+    <div data-container="">
+      {% block main %}
+      {% endblock %}
+    </div>
+  </main>
+  <footer>
+    {% block footer %}
+      <div class="align-center has-padding-big">
+        <small><a href="/impressum">Impressum</a></small>
+        <small><a href="/datenschutz">Datenschutz</a></small>
+      </div>
+    {% endblock %}
+  </footer>
+</div>
+{% block customscript %}{% endblock %}
+{% block scripts %}{% endblock %}
+</body>
+</html>
