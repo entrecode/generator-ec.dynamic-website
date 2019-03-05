@@ -90,7 +90,7 @@ describe('route tests', () => {
       });
       it(`valid html ${route}`, async () => {
         const errors = await validateResponse(response.text)
-        expect(errors).to.eql('');
+        expect(errors).to.not.be.ok;
       });
     });
   }

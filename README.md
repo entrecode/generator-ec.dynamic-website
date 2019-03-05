@@ -13,6 +13,8 @@ npm install -g generator-ec.dynamic-website
 Then generate your new project:
 
 ```bash
+mkdir myproject
+cd myproject
 yo ec.dynamic-website
 ```
 

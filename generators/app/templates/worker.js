@@ -12,10 +12,6 @@ process.title = `${config.title}-w`;
 
 require('./router');
 
-process.on('unhandledRejection', (reason, p) => {
-  logger.error('Unhandled Rejection at: Promise', p, 'reason:', reason);
-});
-
 clusterProcess.handleSignals(() => {
   server.close();
   if (cluster.worker) {

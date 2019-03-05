@@ -5,12 +5,11 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node worker.js & npm run watch",
+    "dev": "node $NODE_DEBUG_OPTION worker.js & npm run watch",
     "test": "NODE_ENV=testing mocha -R spec",
-    "build": "echo \"Please create build instructions.\" && exit 1",
-    "production": "npm run build",
-    "staging": "npm run build",
-    "watch": "echo \"Please add watch instructions.\" && exit 1"
+    "build": "NODE_ENV=production webpack",
+    "production": "NODE_ENV=production npm run build",
+    "watch": "NODE_ENV=development webpack --watch"
   },
   "repository": {
     "type": "git",
@@ -19,21 +18,9 @@
   "author": "entrecode <info@entrecode.de>",
   "private": true,
   "dependencies": {
-    "amqp-connection-manager": "^2.0.0",
-    "amqplib": "^0.5.2",
-    "config": "^1.30.0",
-    "ec.dm-cache": "git+ssh://git@stash.entrecode.de:7999/cms/ec.dm-cache.git#0.5.3",
-    "ec.logger": "git+ssh://git@stash.entrecode.de:7999/cms/ec.logger.git#0.3.1",
-    "ec.sdk": "^0.16.11",
-    "express-promise-router": "^3.0.2",
-    "node-clusterprocess": "^1.1.0",
-    "visual-cms.website": "^0.8.0",
-    "winston": "^2.4.2",
-    "winston-sns": "^0.2.4"
+    
   },
   "devDependencies": {
-    "mocha": "^5.2.0",
-    "mocha-bamboo-reporter": "^1.1.1",
-    "supertest": "^3.1.0"
+ 
   }
 }
