@@ -47,16 +47,20 @@ function shortenUUID(uuid, factor) {
 }
 
 const justCopy = [
+  'config/custom-environment-variables.yml',
   'config/development.yml',
   'config/production.yml',
   'config/local.js',
   'extensions/.npmignore',
   'rancher_templates',
+  'src',
   'static/.npmignore',
+  'style',
   ['vscode', '.vscode'],
-  'Dockerfile',
   ['gitignore', '.gitignore'],
-  'server.js'
+  'Dockerfile',
+  'server.js',
+  'webpack.config.js'
 ];
 const templatedCopy = [
   'config/default.yml',
@@ -79,7 +83,7 @@ module.exports = class extends Generator {
     const prompts = [{
       type: 'input',
       name: 'name',
-      message: 'Your project name:',
+      message: 'Your project name (without dynamic-website suffix):',
       default: this.appname // Default to current folder name
     }, {
       type: 'input',
@@ -101,24 +105,12 @@ module.exports = class extends Generator {
         'nightly'
       ],
       default: 'live'
-    }, {
-      type: 'confirm',
-      name: 'search',
-      message: 'Do you need ec.search?',
-      default: false
     }];
 
     return this.prompt(prompts)
       .then(props => {
         // To access props later use this.props.someAnswer;
         props.shortID = shortenUUID(props.dataManagerID, 2);
-        if (props.search) {
-          if (props.env === 'stage') {
-            props.search = 'https://search.cachena.entrecode.de';
-          } else {
-            props.search = 'https://search.entrecode.de';
-          }
-        }
         this.props = props;
       });
   }
@@ -145,8 +137,41 @@ module.exports = class extends Generator {
   }
 
   install() {
-    this.npmInstall();
-    //this.npmInstall(['visual-cms.website'], { save: true });
-    //this.npmInstall(['chai', 'html-validator', 'mocha', 'mocha-bamboo-reporter', 'node-sass', 'supertest'], { 'save-dev': true });
+    this.npmInstall([
+      'config',
+      'entrecode/ec.amqp',
+      'entrecode/ec.dm-cache',
+      'entrecode/ec.logger',
+      'node-clusterprocess',
+      'sitemap',
+      'visual-cms.website',
+      'winston',
+      'winston-aws-cloudwatch',
+    ], { save: true });
+    this.npmInstall([
+      '@babel/core',
+      '@babel/plugin-syntax-dynamic-import',
+      '@babel/preset-env',
+      'babel-loader',
+      'babel-polyfill',
+      'chai',
+      'css-loader',
+      'html-validator',
+      'intersection-observer',
+      'mini-css-extract-plugin',
+      'mocha',
+      'mocha-bamboo-reporter',
+      'node-sass',
+      'postcss-loader',
+      'sass-loader',
+      'style-loader',
+      'supertest',
+      'vue',
+      'webpack',
+      'webpack-cli',
+      'webpack-fix-style-only-entries',
+      'webpack-manifest-plugin',
+      'x.ui'
+    ], { 'save-dev': true });
   }
 };
