@@ -52,7 +52,6 @@ const justCopy = [
   'config/production.yml',
   'config/local.js',
   'extensions/.npmignore',
-  'rancher_templates',
   'src',
   'static/.npmignore',
   'style',

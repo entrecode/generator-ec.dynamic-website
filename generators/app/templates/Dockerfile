@@ -1,6 +1,5 @@
 # Dockerfile based on tinibase used by entrecode. By entrecode.
 # Version 0.0.1
 
-FROM docker.entrecode.de/tini-build:10.15.1
-
-EXPOSE 7777
+FROM p.entrecode.de/core/tini:12.6.0-build
+LABEL maintainer='Ruben Deyhle <deyhle@entrecode.de>'

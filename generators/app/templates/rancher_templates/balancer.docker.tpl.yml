@@ -1,4 +1,0 @@
-{{balancer}}:
-  image: rancher/dns-service
-  links:
-  - {{serviceName}}:{{serviceName}}

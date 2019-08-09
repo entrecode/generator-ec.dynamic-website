@@ -37,6 +37,17 @@ router.use(async (req, res) => {
   return 'next';
 });
 
+router.use((req, res, next) => {
+  const { publicURL } = config;
+  const { originalUrl } = req;
+  const hostname = req.get('X-Host') || req.hostname;
+  if (!publicURL.includes(hostname)) {
+    logger.info(`headers: ${JSON.stringify(req.headers)}`);
+    return res.redirect(301, `${publicURL}${originalUrl.slice(1)}`);
+  }
+  return next();
+});
+
 /* robots.txt. If config.disableCrawling is set, only seobility is allowed */
 router.get('/robots.txt', cache.middleware(60 * 10), (req, res) => {
   res.set('Content-Type', 'text/plain');
